@@ -1,0 +1,41 @@
+{
+  "name": "micro-webreader",
+  "version": "0.1.0",
+  "description": "A web reader bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "micro",
+    "test": "xo && ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/littledumb/micro-webreader"
+  },
+  "keywords": [
+    "web reader",
+    "microservice",
+    "micro"
+  ],
+  "author": "Jiamin Zhao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/littledumb/micro-webreader/issues"
+  },
+  "homepage": "https://github.com/littledumb/micro-webreader#readme",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "xo": "^0.22.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "html-to-text": "^4.0.0",
+    "lowdb": "^1.0.0",
+    "micro": "^9.3.3",
+    "micro-query": "^0.3.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  },
+  "xo": {
+    "space": true
+  }
+}
