@@ -6,6 +6,7 @@ const cheerio = require('cheerio');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const htmlToText = require('html-to-text');
+const iconv = require('iconv-lite');
 
 const adapter = new FileSync('sites.json');
 const db = low(adapter);
@@ -23,6 +24,10 @@ const addOrReplaceSite = async site => {
     context: site.context
   };
 
+  if (site.encoding) {
+    newSite.encoding = site.encoding;
+  }
+
   return sites.push(newSite).write();
 };
 
@@ -32,7 +37,16 @@ const deleteSite = async site => {
 
 const read = async (url, site) => {
   try {
-    const body = await request(url);
+    let body = await request({
+      uri: url,
+      method: 'GET',
+      encoding: null
+    });
+
+    if (site.encoding && iconv.encodingExists(site.encoding)) {
+      body = iconv.decode(Buffer.from(body), site.encoding);
+    }
+
     const $ = cheerio.load(body);
     const elements = $(site.selector, site.context);
 
