@@ -81,7 +81,7 @@ module.exports = async (req, res) => {
       if (!site) {
         const hosts = await sites.value().map(s => s.host);
         return send(res, 404,
-          'The service only supports the following sites: ' +
+          'We only support the following sites: ' +
           hosts.join(', '));
       }
       return send(res, 200, await read(params.url, site));
