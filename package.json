@@ -26,8 +26,8 @@
     "xo": "^0.22.0"
   },
   "dependencies": {
+    "chardet": "^0.7.0",
     "cheerio": "^1.0.0-rc.2",
-    "detect-character-encoding": "^0.6.0",
     "html-to-text": "^4.0.0",
     "iconv-lite": "^0.4.24",
     "micro": "^9.3.3",

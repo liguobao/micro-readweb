@@ -4,7 +4,7 @@ const {send, json} = require('micro');
 const request = require('request-promise');
 const cheerio = require('cheerio');
 const htmlToText = require('html-to-text');
-const detect = require('detect-character-encoding');
+const detect = require('chardet');
 const iconv = require('iconv-lite');
 
 // Use Pareto's principle to determine the main element
@@ -34,10 +34,11 @@ module.exports = async (req, res) => {
       encoding: null // Must set to null, otherwise request will use its default encoding
     });
 
-    const {encoding, confidence} = detect(body);
-    const $ = iconv.encodingExists(encoding) && confidence > 50 ?
-      cheerio.load(iconv.decode(body, encoding)) :
-      cheerio.load(await request(params.url));
+    const encoding = detect.detectAll(body);
+    if (encoding[0].confidence < 50 || !iconv.encodingExists(encoding[0].name)) {
+      return send(res, 400, 'an encoding issue is encountered.\n');
+    }
+    const $ = cheerio.load(iconv.decode(body, encoding[0].name));
     const text = htmlToText.fromString($(pareto($, $('body'))).html(), {
       ignoreHref: true,
       singleNewLineParagraphs: true
