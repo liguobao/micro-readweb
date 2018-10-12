@@ -6,4 +6,10 @@ Read the main text content of a web page.
 
 Example:
 
-`Curl -H "Content-type:application-json" -d '{"url":"url_of_the_web_page"}' https://localhost:3000`
+`curl -H "Content-type:application-json" -d '{"url":"url_of_the_web_page"}' http://localhost:3000`
+
+Options:
+
+* `keepHref`: if `true`, the returned text will keep links in the original content.
+
+`curl -H "Content-type:application-json" -d '{"url":"url_of_the_web_page", "keepHref":true}' http://localhost:3000`

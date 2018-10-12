@@ -39,8 +39,10 @@ module.exports = async (req, res) => {
       return send(res, 400, 'an encoding issue is encountered.\n');
     }
     const $ = cheerio.load(iconv.decode(body, encoding[0].name));
-    const text = htmlToText.fromString($(pareto($, $('body'))).html(), {
-      ignoreHref: true,
+    const html = $(pareto($, $('body'))).html();
+    const ignoreHref = !params.keepHref;
+    const text = htmlToText.fromString(html, {
+      ignoreHref,
       singleNewLineParagraphs: true
     }).replace(/\n\s*\n/g, '\n').replace(/\n/g, '\n\n');
 
