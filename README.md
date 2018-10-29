@@ -11,5 +11,6 @@ Example:
 Options:
 
 * `keepHref`: if `true`, the returned text will keep links in the original content.
+* `paretoRatio`: a number between 0.5 and 1.0, default is 0.6.
 
 `curl -H "Content-type:application-json" -d '{"url":"url_of_the_web_page", "keepHref":true}' http://localhost:3000`
