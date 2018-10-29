@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
 
-const defaultParetoRatio = 0.6;
+const defaultParetoRatio = 0.8;
 const headerNameForRequest = 'x-request-id';
 const headerNameForCorrelation = 'x-correlation-id';
 const logger = logzio.createLogger({
