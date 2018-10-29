@@ -1,5 +1,5 @@
 {
-  "name": "micro-webreader",
+  "name": "micro-readweb",
   "version": "0.1.0",
   "description": "A web reader bot",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/littledumb/micro-webreader"
+    "url": "git+https://github.com/littledumb/micro-readweb"
   },
   "keywords": [
     "web reader",
@@ -19,9 +19,9 @@
   "author": "Jiamin Zhao",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/littledumb/micro-webreader/issues"
+    "url": "https://github.com/littledumb/micro-readweb/issues"
   },
-  "homepage": "https://github.com/littledumb/micro-webreader#readme",
+  "homepage": "https://github.com/littledumb/micro-readweb#readme",
   "devDependencies": {
     "xo": "^0.22.0"
   },
