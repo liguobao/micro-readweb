@@ -28,9 +28,13 @@
   "dependencies": {
     "chardet": "^0.7.0",
     "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.1.0",
     "html-to-text": "^4.0.0",
+    "http-errors": "^1.7.1",
     "iconv-lite": "^0.4.24",
+    "logzio-nodejs": "^0.4.15",
     "micro": "^9.3.3",
+    "micro-logzio": "^0.2.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
