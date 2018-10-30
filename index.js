@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
 
-const defaultParetoRatio = 0.8;
+const defaultParetoRatio = 0.6;
 const headerNameForRequest = 'x-request-id';
 const headerNameForCorrelation = 'x-correlation-id';
 const logger = logzio.createLogger({
@@ -73,7 +73,7 @@ const pareto = ($, el, p) => {
   let candidate = el;
   $(el).children().each((i, child) => {
     if ($(child).text().length >= p * total) {
-      candidate = pareto($, child);
+      candidate = pareto($, child, p);
     }
   });
 
