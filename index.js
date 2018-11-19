@@ -7,30 +7,14 @@ const htmlToText = require('html-to-text');
 const detect = require('chardet');
 const iconv = require('iconv-lite');
 const httpError = require('http-errors');
-const logzio = require('logzio-nodejs');
-const microLogzio = require('micro-logzio');
+const {logzioLogger, getCorrelationId} = require('micro-logzio');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
 
 const defaultParetoRatio = 0.6;
-const headerNameForRequest = 'x-request-id';
-const headerNameForCorrelation = 'x-correlation-id';
-const logger = logzio.createLogger({
-  token: process.env.LOGZIO_TOKEN,
-  host: 'listener.logz.io'
-});
-const reqLogger = microLogzio({
-  logger,
-  headerNameForRequest,
-  headerNameForCorrelation
-});
-
-const createContext = (req, res) => {
-  const correlationId = res.getHeader(headerNameForCorrelation);
-  return {correlationId};
-};
+const correlationIdHeader = 'x-correlation-id';
 
 const check = params => {
   const {url} = params;
@@ -45,9 +29,9 @@ const check = params => {
   return {url, keepHref, paretoRatio};
 };
 
-const getContent = async (cxt, url) => {
+const getContent = async url => {
   const headers = {};
-  headers[headerNameForCorrelation] = cxt.correlationId;
+  headers[correlationIdHeader] = getCorrelationId();
   const options = {
     uri: url,
     method: 'GET',
@@ -80,12 +64,11 @@ const pareto = ($, el, p) => {
   return candidate;
 };
 
-module.exports = reqLogger(async (req, res) => {
+module.exports = logzioLogger({token: process.env.LOGZIO_TOKEN})(async (req, res) => {
   try {
-    const cxt = createContext(req, res);
     const {url, keepHref, paretoRatio} = check(await json(req));
 
-    const content = await getContent(cxt, url);
+    const content = await getContent(url);
     const encoding = getEncoding(content);
 
     const $ = cheerio.load(iconv.decode(content, encoding));

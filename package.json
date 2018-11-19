@@ -32,9 +32,8 @@
     "html-to-text": "^4.0.0",
     "http-errors": "^1.7.1",
     "iconv-lite": "^0.4.24",
-    "logzio-nodejs": "^0.4.15",
     "micro": "^9.3.3",
-    "micro-logzio": "^0.2.1",
+    "micro-logzio": "^0.3.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
