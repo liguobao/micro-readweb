@@ -7,14 +7,12 @@ const htmlToText = require('html-to-text');
 const detect = require('chardet');
 const iconv = require('iconv-lite');
 const httpError = require('http-errors');
-const {logzioLogger, getCorrelationId} = require('micro-logzio');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
 
 const defaultParetoRatio = 0.6;
-const correlationIdHeader = 'x-correlation-id';
 
 const check = params => {
   const {url} = params;
@@ -30,12 +28,9 @@ const check = params => {
 };
 
 const getContent = async url => {
-  const headers = {};
-  headers[correlationIdHeader] = getCorrelationId();
   const options = {
     uri: url,
     method: 'GET',
-    headers,
     encoding: null // Must set to null, otherwise request will use its default encoding
   };
   const content = await request(options);
@@ -64,7 +59,7 @@ const pareto = ($, el, p) => {
   return candidate;
 };
 
-module.exports = logzioLogger({token: process.env.LOGZIO_TOKEN})(async (req, res) => {
+module.exports = async (req, res) => {
   try {
     const {url, keepHref, paretoRatio} = check(await json(req));
 
@@ -82,5 +77,5 @@ module.exports = logzioLogger({token: process.env.LOGZIO_TOKEN})(async (req, res
   } catch (error) {
     return send(res, error.statusCode || 500, error.message || 'Something wrong with the service.');
   }
-});
+};
 

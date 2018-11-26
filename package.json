@@ -33,7 +33,6 @@
     "http-errors": "^1.7.1",
     "iconv-lite": "^0.4.24",
     "micro": "^9.3.3",
-    "micro-logzio": "^0.3.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },
