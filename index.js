@@ -15,7 +15,7 @@ if (process.env.NODE_ENV !== 'production') {
 const defaultParetoRatio = 0.6;
 
 const check = params => {
-  const {url} = params;
+  const {url, encoding} = params;
   const keepHref = params.keepHref || false;
   if (!url) {
     throw httpError(400, 'url is a required parameter.');
@@ -24,7 +24,7 @@ const check = params => {
   if (paretoRatio >= 1.0 || paretoRatio <= 0.5) {
     throw httpError(400, 'paretoRatio should be a number between 0.5 and 1.0');
   }
-  return {url, keepHref, paretoRatio};
+  return {url, keepHref, paretoRatio, encoding};
 };
 
 const getContent = async url => {
@@ -61,12 +61,11 @@ const pareto = ($, el, p) => {
 
 module.exports = async (req, res) => {
   try {
-    const {url, keepHref, paretoRatio} = check(await json(req));
+    const {url, keepHref, paretoRatio, encoding} = check(await json(req));
 
     const content = await getContent(url);
-    const encoding = getEncoding(content);
 
-    const $ = cheerio.load(iconv.decode(content, encoding));
+    const $ = cheerio.load(iconv.decode(content, encoding || getEncoding(content)));
     const html = $(pareto($, $('body'), paretoRatio)).html();
     const text = htmlToText.fromString(html, {
       ignoreHref: !keepHref,
