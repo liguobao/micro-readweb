@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "micro",
-    "test": "xo"
+    "test": "xo && ava"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,9 @@
   },
   "homepage": "https://github.com/littledumb/micro-readweb#readme",
   "devDependencies": {
+    "ajv": "^6.6.1",
+    "ava": "^0.25.0",
+    "test-listen": "^1.1.0",
     "xo": "^0.22.0"
   },
   "dependencies": {
