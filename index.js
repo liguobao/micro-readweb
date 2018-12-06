@@ -1,12 +1,11 @@
 'use strict';
 
 const {send, json} = require('micro');
-const request = require('request-promise');
+const phantom = require('phantom');
 const cheerio = require('cheerio');
 const htmlToText = require('html-to-text');
-const detect = require('chardet');
-const iconv = require('iconv-lite');
 const httpError = require('http-errors');
+const Timeout = require('await-timeout');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
@@ -15,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
 const defaultParetoRatio = 0.6;
 
 const check = params => {
-  const {url, encoding} = params;
+  const {url, timeout} = params;
   const keepHref = params.keepHref || false;
   if (!url) {
     throw httpError(400, 'url is a required parameter.');
@@ -24,26 +23,32 @@ const check = params => {
   if (paretoRatio >= 1.0 || paretoRatio <= 0.5) {
     throw httpError(400, 'paretoRatio should be a number between 0.5 and 1.0');
   }
-  return {url, keepHref, paretoRatio, encoding};
+  return {url, keepHref, paretoRatio, timeout};
 };
 
-const getEncoding = content => {
-  const encoding = detect.detectAll(content);
-  if (encoding[0].confidence < 50 || !iconv.encodingExists(encoding[0].name)) {
-    throw httpError(501, 'Can\'t recognize encoding of the web page.');
+const getContent = async (url, timeout) => {
+  const instance = await phantom.create();
+  const page = await instance.createPage();
+
+  const timer = new Timeout();
+  try {
+    const status = await page.open(url);
+    if (status !== 'success') {
+      console.log(status);
+      await instance.exit();
+      throw httpError(500, 'Error occurred when reading the page.');
+    }
+
+    if (timeout) {
+      await timer.set(timeout);
+    }
+
+    const content = await page.property('content');
+    await instance.exit();
+    return content;
+  } finally {
+    timer.clear();
   }
-  return encoding[0].name;
-};
-
-const getContent = async (url, encoding) => {
-  const options = {
-    uri: url,
-    method: 'GET',
-    gzip: true,
-    encoding: null // Must set to null, otherwise request will use its default encoding
-  };
-  const content = await request(options);
-  return iconv.decode(content, encoding || getEncoding(content));
 };
 
 // Use Pareto's principle to determine the main element
@@ -62,9 +67,9 @@ const pareto = ($, el, p) => {
 
 module.exports = async (req, res) => {
   try {
-    const {url, keepHref, paretoRatio, encoding} = check(await json(req));
+    const {url, keepHref, paretoRatio, timeout} = check(await json(req));
 
-    const content = await getContent(url, encoding);
+    const content = await getContent(url, timeout);
     const $ = cheerio.load(content);
     const html = $(pareto($, $('body'), paretoRatio)).html();
     const text = htmlToText.fromString(html, {

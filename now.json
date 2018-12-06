@@ -1,7 +1,10 @@
 {
+  "version": 2,
   "env": {
-    "NODE_ENV": "production",
-    "LOGZIO_TOKEN": "@logzio_token"
+    "NODE_ENV": "production"
   },
+  "builds": [
+    { "src": "index.js", "use": "@now/node" }
+  ],
   "alias": "readweb.wezeit.co"
 }

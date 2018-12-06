@@ -29,13 +29,13 @@
     "xo": "^0.22.0"
   },
   "dependencies": {
-    "chardet": "^0.7.0",
+    "await-timeout": "^0.3.0",
     "cheerio": "^1.0.0-rc.2",
     "dotenv": "^6.1.0",
     "html-to-text": "^4.0.0",
     "http-errors": "^1.7.1",
-    "iconv-lite": "^0.4.24",
     "micro": "^9.3.3",
+    "phantom": "^6.0.3",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
   },

@@ -10,9 +10,13 @@ const service = require('.');
 let s = null;
 let u = null;
 
-const testRead = async (t, url) => {
+const testRead = async (t, url, contains = null, timeout = null) => {
   try {
-    await request.post(u).json({url});
+    const content = await request.post(u).json({url, timeout});
+    if (contains) {
+      t.true(content.indexOf(contains) >= 0);
+      return;
+    }
     t.pass();
   } catch (error) {
     t.fail();
@@ -43,4 +47,9 @@ test('utf8, compressed', async t => {
 test('gb2312, compressed', async t => {
   const url = 'http://www.jjwxc.net/onebook.php?novelid=1469663';
   await testRead(t, url);
+});
+
+test('ajax loaded content', async t => {
+  const url = 'https://book.qidian.com/info/2083259#Catalog';
+  await testRead(t, url, '第一章', 5000);
 });
